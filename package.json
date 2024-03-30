@@ -1,6 +1,6 @@
 {
   "name": "drizzle-orm-crsqlite-wasm",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Drizzle ORM adapter for CR-SQLite WASM",
   "type": "module",
   "repository": {
