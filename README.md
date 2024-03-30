@@ -112,22 +112,17 @@ const countries = await db.select().from(schema.countries).all()
 6. prepared queries should be finalized to avoid memory leaks
 
    ```ts
-   const res = db.query.countries
-   	.findMany({
-   		with: {
-   			cities: {
-   				where: (city, { eq, sql }) =>
-   					eq(city.name, sql.placeholder("cityName")),
-   			},
-   		},
-   	})
+   const query = db
+   	.select()
+   	.from(schema.countries)
+   	.where(eq(schema.countries.name, sql.placeholder("countryName")))
    	.prepare()
 
-   const [country] = await res.all({ cityName: "Lima" })
+   const [country] = await query.all({ countryName: "Peru" })
 
    // @ts-expect-error
-   await res.finalize()
+   await query.finalize()
    ```
 
-   > [!CAUTION]
-   > The `.finalize()` method _is indeed exposed_ on the `CRSQLPreparedQuery` object returned by calling `.prepare()` on a drizzle relational query-builder. However typescript does not know about it because to expose it would require modifications to the `drizzle-orm` package.
+> [!CAUTION]
+> The `.finalize()` method _is indeed exposed_ on the `CRSQLPreparedQuery` object returned by calling `.prepare()` on a drizzle query-builder. However typescript does not know about it because to expose it would require modifications to the `drizzle-orm` package.
