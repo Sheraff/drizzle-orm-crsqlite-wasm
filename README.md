@@ -125,4 +125,4 @@ const countries = await db.select().from(schema.countries).all()
    ```
 
 > [!CAUTION]
-> The `.finalize()` method _is indeed exposed_ on the `CRSQLPreparedQuery` object returned by calling `.prepare()` on a drizzle query-builder. However typescript does not know about it because to expose it would require modifications to the `drizzle-orm` package.
+> The `.finalize()` method _is indeed exposed_ on the `CRSQLitePreparedQuery` object returned by calling `.prepare()` on a drizzle query-builder. However typescript does not know about it because to expose it would require modifications to the `drizzle-orm` package.

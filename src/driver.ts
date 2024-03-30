@@ -11,13 +11,13 @@ import type { DrizzleConfig } from "drizzle-orm/utils"
 import { CRSQLiteSession } from "./session.js"
 import type { DBAsync } from "@vlcn.io/xplat-api"
 
-export type CRSQLite3Database<TSchema extends Record<string, unknown> = Record<string, never>> =
+export type CRSQLiteDatabase<TSchema extends Record<string, unknown> = Record<string, never>> =
 	BaseSQLiteDatabase<"async", void, TSchema>
 
 export function drizzle<TSchema extends Record<string, unknown> = Record<string, never>>(
 	client: DBAsync,
 	config?: DrizzleConfig<TSchema>
-): CRSQLite3Database<TSchema> {
+): CRSQLiteDatabase<TSchema> {
 	const dialect = new SQLiteAsyncDialect()
 	let logger
 	if (config?.logger === true) {
@@ -41,5 +41,5 @@ export function drizzle<TSchema extends Record<string, unknown> = Record<string,
 
 	const session = new CRSQLiteSession(client, dialect, schema, { logger })
 	//@ts-expect-error -- inner type errors shouldn't matter much
-	return new BaseSQLiteDatabase("async", dialect, session, schema) as CRSQLite3Database<TSchema>
+	return new BaseSQLiteDatabase("async", dialect, session, schema) as CRSQLiteDatabase<TSchema>
 }

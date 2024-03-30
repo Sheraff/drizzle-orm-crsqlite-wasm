@@ -1,5 +1,5 @@
 import type { MigrationMeta } from "drizzle-orm/migrator"
-import type { CRSQLite3Database } from "./driver.js"
+import type { CRSQLiteDatabase } from "./driver.js"
 import { sql, type TablesRelationalConfig } from "drizzle-orm"
 import type { SQLiteSession } from "drizzle-orm/sqlite-core"
 
@@ -10,7 +10,7 @@ type MigrationConfig = {
 }
 
 export async function migrate<TSchema extends Record<string, unknown>>(
-	db: CRSQLite3Database<TSchema>,
+	db: CRSQLiteDatabase<TSchema>,
 	config: MigrationConfig = { migrations: [] }
 ) {
 	const migrations = config.migrations

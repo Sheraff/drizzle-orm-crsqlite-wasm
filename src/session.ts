@@ -39,8 +39,8 @@ export class CRSQLiteSession<
 		executeMethod: SQLiteExecuteMethod,
 		_isResponseInArrayMode: boolean,
 		customResultMapper?: (rows: unknown[][]) => unknown
-	): CRSQLPreparedQuery<T> {
-		return new CRSQLPreparedQuery(
+	): CRSQLitePreparedQuery<T> {
+		return new CRSQLitePreparedQuery(
 			this.client,
 			query,
 			false,
@@ -58,7 +58,7 @@ export class CRSQLiteSession<
 		executeMethod: SQLiteExecuteMethod,
 		_isResponseInArrayMode: boolean
 	): SQLitePreparedQuery<PreparedQueryConfig & { type: "async" }> {
-		return new CRSQLPreparedQuery(
+		return new CRSQLitePreparedQuery(
 			this.client,
 			query,
 			true,
@@ -70,7 +70,7 @@ export class CRSQLiteSession<
 	}
 
 	override async transaction<T>(
-		transaction: (db: CRSQLTransaction<TFullSchema, TSchema>) => Promise<T>
+		transaction: (db: CRSQLiteTransaction<TFullSchema, TSchema>) => Promise<T>
 		// _config?: SQLiteTransactionConfig
 	): Promise<T> {
 		const [release, imperativeTx] = await this.client.imperativeTx()
@@ -81,7 +81,7 @@ export class CRSQLiteSession<
 			this.options,
 			imperativeTx
 		)
-		const tx = new CRSQLTransaction("async", this.dialect, session, this.schema)
+		const tx = new CRSQLiteTransaction("async", this.dialect, session, this.schema)
 		try {
 			const result = await tx.transaction(transaction)
 			release()
@@ -119,7 +119,7 @@ declare module "drizzle-orm/session" {
 	}
 }
 
-export class CRSQLPreparedQuery<
+export class CRSQLitePreparedQuery<
 	T extends PreparedQueryConfig = PreparedQueryConfig,
 > extends SQLitePreparedQuery<{
 	type: "async"
@@ -129,7 +129,7 @@ export class CRSQLPreparedQuery<
 	values: T["values"]
 	execute: T["execute"]
 }> {
-	static readonly [entityKind]: string = "CRSQLPreparedQuery"
+	static readonly [entityKind]: string = "CRSQLitePreparedQuery"
 
 	private stmt: Promise<StmtAsync>
 
@@ -214,17 +214,17 @@ export class CRSQLPreparedQuery<
 	}
 }
 
-export class CRSQLTransaction<
+export class CRSQLiteTransaction<
 	TFullSchema extends Record<string, unknown>,
 	TSchema extends TablesRelationalConfig,
 > extends SQLiteTransaction<"async", void, TFullSchema, TSchema> {
-	static readonly [entityKind]: string = "CRSQLTransaction"
+	static readonly [entityKind]: string = "CRSQLiteTransaction"
 
 	override async transaction<T>(
-		transaction: (tx: CRSQLTransaction<TFullSchema, TSchema>) => Promise<T>
+		transaction: (tx: CRSQLiteTransaction<TFullSchema, TSchema>) => Promise<T>
 	): Promise<T> {
 		const savepointName = `sp${this.nestedIndex}`
-		const tx = new CRSQLTransaction(
+		const tx = new CRSQLiteTransaction(
 			"async",
 			// @ts-expect-error -- it does exist, but we have to add a constructor for TS to recognize it
 			this.dialect,
