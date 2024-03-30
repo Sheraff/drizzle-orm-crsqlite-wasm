@@ -3,7 +3,10 @@
   "version": "0.0.1",
   "description": "Drizzle ORM adapter for CR-SQLite WASM",
   "type": "module",
-  "repository": "https://github.com/Sheraff/drizzle-orm-crsqlite-wasm.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sheraff/drizzle-orm-crsqlite-wasm.git"
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
