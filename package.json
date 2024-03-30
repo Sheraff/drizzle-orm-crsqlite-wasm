@@ -1,0 +1,41 @@
+{
+  "name": "drizzle-orm-crsqlite-wasm",
+  "version": "0.0.1",
+  "description": "Drizzle ORM adapter for CR-SQLite WASM",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./migrator": {
+      "import": "./dist/migrator.js",
+      "types": "./dist/migrator.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc --build"
+  },
+  "keywords": [
+    "drizzle",
+    "orm",
+    "sqlite",
+    "wasm",
+    "crsqlite",
+    "vlcn"
+  ],
+  "author": "@Sheraff",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.4.3"
+  },
+  "peerDependencies": {
+    "@vlcn.io/xplat-api": "^0.15.0",
+    "drizzle-orm": "^0.30.6"
+  }
+}
