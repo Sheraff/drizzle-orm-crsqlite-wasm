@@ -14,6 +14,8 @@ interface CRSQLiteSessionOptions {
 	logger?: Logger
 }
 
+type HeldStatementFinalization = { stmt: Promise<StmtAsync>, tx: TXAsync | null }
+
 export class CRSQLiteSession<
 	TFullSchema extends Record<string, unknown>,
 	TSchema extends TablesRelationalConfig,
@@ -21,9 +23,10 @@ export class CRSQLiteSession<
 	static readonly [entityKind]: string = "CRSQLiteSession"
 
 	private logger: Logger
+	private registry: FinalizationRegistry<HeldStatementFinalization>
 
 	constructor(
-		private client: DBAsync,
+		public client: DBAsync,
 		private dialect: SQLiteAsyncDialect,
 		private schema: RelationalSchemaConfig<TSchema> | undefined,
 		private options: CRSQLiteSessionOptions,
@@ -31,6 +34,9 @@ export class CRSQLiteSession<
 	) {
 		super(dialect)
 		this.logger = options.logger ?? new NoopLogger()
+		this.registry = new FinalizationRegistry<HeldStatementFinalization>((heldValue) => {
+			heldValue.stmt.then((stmt) => stmt.finalize(heldValue.tx))
+		})
 	}
 
 	prepareQuery<T extends PreparedQueryConfig>(
@@ -43,7 +49,7 @@ export class CRSQLiteSession<
 		return new CRSQLitePreparedQuery(
 			this.client,
 			query,
-			false,
+			this.registry,
 			this.logger,
 			fields,
 			this.tx ?? null,
@@ -61,7 +67,7 @@ export class CRSQLiteSession<
 		return new CRSQLitePreparedQuery(
 			this.client,
 			query,
-			true,
+			null,
 			this.logger,
 			fields,
 			this.tx ?? null,
@@ -112,13 +118,6 @@ export class CRSQLiteSession<
 	// }
 }
 
-// TODO: this interface augmentation doesn't work, why? we do get a `SQLitePreparedQuery` when calling `.prepare()` but it doesn't have the `finalize` method at the type level
-declare module "drizzle-orm/session" {
-	interface PreparedQuery {
-		finalize(): Promise<void>
-	}
-}
-
 export class CRSQLitePreparedQuery<
 	T extends PreparedQueryConfig = PreparedQueryConfig,
 > extends SQLitePreparedQuery<{
@@ -131,12 +130,14 @@ export class CRSQLitePreparedQuery<
 }> {
 	static readonly [entityKind]: string = "CRSQLitePreparedQuery"
 
-	private stmt: Promise<StmtAsync>
+	/** @internal */
+	public stmt: Promise<StmtAsync>
+	private oneTime: boolean
 
 	constructor(
-		private client: DBAsync,
+		client: DBAsync,
 		query: Query,
-		private oneTime: boolean,
+		registry: FinalizationRegistry<HeldStatementFinalization> | null,
 		private logger: Logger,
 		fields: SelectedFieldsOrdered | undefined,
 		private tx: TXAsync | null,
@@ -144,7 +145,13 @@ export class CRSQLitePreparedQuery<
 		private customResultMapper?: (rows: unknown[][]) => unknown
 	) {
 		super("async", executeMethod, query)
-		this.stmt = (this.tx ?? this.client).prepare(query.sql)
+		this.stmt = (tx ?? client).prepare(query.sql)
+		if (registry) {
+			registry.register(this, { stmt: this.stmt, tx: tx ?? null })
+			this.oneTime = false
+		} else {
+			this.oneTime = true
+		}
 	}
 
 	/**
@@ -203,14 +210,6 @@ export class CRSQLitePreparedQuery<
 			void stmt.finalize(this.tx)
 		}
 		return rows.map((row) => row[0])
-	}
-
-	async finalize(): Promise<void> {
-		if (this.oneTime) {
-			throw new Error("Cannot finalize one-time query")
-		}
-		const stmt = await this.stmt
-		await stmt.finalize(this.tx)
 	}
 }
 
