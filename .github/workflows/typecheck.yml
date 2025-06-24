@@ -1,0 +1,28 @@
+name: Typecheck
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [reopened, opened, synchronize, ready_for_review]
+    branches:
+      - '**/*'
+      - '*'
+
+concurrency:
+  group: pr-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+      - name: Install dependencies
+        run: pnpm i
+      - name: Typecheck
+        run: pnpm check

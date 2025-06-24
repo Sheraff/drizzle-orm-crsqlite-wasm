@@ -40,5 +40,6 @@ export function drizzle<TSchema extends Record<string, unknown> = Record<string,
 	}
 
 	const session = new CRSQLiteSession(client, dialect, schema, { logger })
+
 	return new BaseSQLiteDatabase("async", dialect, session, schema) as CRSQLiteDatabase<TSchema>
 }

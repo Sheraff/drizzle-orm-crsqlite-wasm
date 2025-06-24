@@ -23,7 +23,8 @@
     }
   },
   "scripts": {
-    "build": "tsc --build"
+    "build": "tsc --build",
+    "check": "tsc --noEmit"
   },
   "keywords": [
     "drizzle",
@@ -36,10 +37,14 @@
   "author": "@Sheraff",
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^5.4.3"
+    "typescript": "^5.8.2"
   },
   "peerDependencies": {
     "@vlcn.io/xplat-api": "^0.15.0",
     "drizzle-orm": "^0.43.1"
+  },
+  "packageManager": "pnpm@10.12.2",
+  "engines": {
+    "node": ">=18.12"
   }
 }

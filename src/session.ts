@@ -80,14 +80,14 @@ export class CRSQLiteSession<
 		// _config?: SQLiteTransactionConfig
 	): Promise<T> {
 		const [release, imperativeTx] = await this.client.imperativeTx()
-		const session = new CRSQLiteSession(
+		const session = new CRSQLiteSession<TFullSchema, TSchema>(
 			this.client,
 			this.dialect,
 			this.schema,
 			this.options,
 			imperativeTx
 		)
-		const tx = new CRSQLiteTransaction("async", this.dialect, session, this.schema)
+		const tx = new CRSQLiteTransaction<TFullSchema, TSchema>("async", this.dialect, session, this.schema)
 		try {
 			// @ts-expect-error
 			const result = await tx.transaction(transaction)
@@ -224,7 +224,7 @@ export class CRSQLiteTransaction<
 		transaction: (tx: CRSQLiteTransaction<TFullSchema, TSchema>) => Promise<T>
 	): Promise<T> {
 		const savepointName = `sp${this.nestedIndex}`
-		const tx = new CRSQLiteTransaction(
+		const tx = new CRSQLiteTransaction<TFullSchema, TSchema>(
 			"async",
 			// @ts-expect-error -- it does exist, but we have to add a constructor for TS to recognize it
 			this.dialect,
