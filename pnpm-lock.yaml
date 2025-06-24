@@ -1,36 +1,34 @@
-lockfileVersion: '6.0'
+lockfileVersion: '9.0'
 
 settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-dependencies:
-  '@vlcn.io/xplat-api':
-    specifier: ^0.15.0
-    version: 0.15.0
-  drizzle-orm:
-    specifier: ^0.30.6
-    version: 0.30.6
+importers:
 
-devDependencies:
-  typescript:
-    specifier: ^5.4.3
-    version: 5.4.3
+  .:
+    dependencies:
+      '@vlcn.io/xplat-api':
+        specifier: ^0.15.0
+        version: 0.15.0
+      drizzle-orm:
+        specifier: ^0.30.6
+        version: 0.30.10
+    devDependencies:
+      typescript:
+        specifier: ^5.8.2
+        version: 5.8.3
 
 packages:
 
-  /@vlcn.io/xplat-api@0.15.0:
+  '@vlcn.io/xplat-api@0.15.0':
     resolution: {integrity: sha512-2/aE7VgI3EbIO5EcJGrskAJuCa2pteY1rWNWfhovFKMERe9NhJdlDMIB1I31X0sN/WC2DnF30RqcdTXNfYyzhQ==}
-    dependencies:
-      comlink: 4.4.1
-    dev: false
 
-  /comlink@4.4.1:
-    resolution: {integrity: sha512-+1dlx0aY5Jo1vHy/tSsIGpSkN4tS9rZSW8FIhG0JH/crs9wwweswIo/POr451r7bZww3hFbPAKnTpimzL/mm4Q==}
-    dev: false
+  comlink@4.4.2:
+    resolution: {integrity: sha512-OxGdvBmJuNKSCMO4NTl1L47VRp6xn2wG4F/2hYzB6tiCb709otOxtEYCSvK80PtjODfXXZu8ds+Nw5kVCjqd2g==}
 
-  /drizzle-orm@0.30.6:
-    resolution: {integrity: sha512-8RgNUmY7J03GRuRgBV5SaJNbYgLVPjdSWNS/bRkIMIHt2TFCA439lJsNpqYX8asyKMqkw8ceBiamUnCIXZIt9w==}
+  drizzle-orm@0.30.10:
+    resolution: {integrity: sha512-IRy/QmMWw9lAQHpwbUh1b8fcn27S/a9zMIzqea1WNOxK9/4EB8gIo+FZWLiPXzl2n9ixGSv8BhsLZiOppWEwBw==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=3'
@@ -44,7 +42,7 @@ packages:
       '@types/pg': '*'
       '@types/react': '>=18'
       '@types/sql.js': '*'
-      '@vercel/postgres': '*'
+      '@vercel/postgres': '>=0.8.0'
       '@xata.io/client': '*'
       better-sqlite3: '>=7'
       bun-types: '*'
@@ -108,10 +106,20 @@ packages:
         optional: true
       sqlite3:
         optional: true
-    dev: false
 
-  /typescript@5.4.3:
-    resolution: {integrity: sha512-KrPd3PKaCLr78MalgiwJnA25Nm8HAmdwN3mYUYZgG/wizIo9EainNVQI9/yDavtVFRN2h3k8uf3GLHuhDMgEHg==}
+  typescript@5.8.3:
+    resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
     engines: {node: '>=14.17'}
     hasBin: true
-    dev: true
+
+snapshots:
+
+  '@vlcn.io/xplat-api@0.15.0':
+    dependencies:
+      comlink: 4.4.2
+
+  comlink@4.4.2: {}
+
+  drizzle-orm@0.30.10: {}
+
+  typescript@5.8.3: {}
