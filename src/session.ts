@@ -223,7 +223,7 @@ export class CRSQLiteTransaction<
 		transaction: (tx: CRSQLiteTransaction<TFullSchema, TSchema>) => Promise<T>
 	): Promise<T> {
 		const savepointName = `sp${this.nestedIndex}`
-		const tx = new CRSQLiteTransaction(
+		const tx = new CRSQLiteTransaction<TFullSchema, TSchema>(
 			"async",
 			// @ts-expect-error -- it does exist, but we have to add a constructor for TS to recognize it
 			this.dialect,
