@@ -80,14 +80,14 @@ export class CRSQLiteSession<
 		// _config?: SQLiteTransactionConfig
 	): Promise<T> {
 		const [release, imperativeTx] = await this.client.imperativeTx()
-		const session = new CRSQLiteSession(
+		const session = new CRSQLiteSession<TFullSchema, TSchema>(
 			this.client,
 			this.dialect,
 			this.schema,
 			this.options,
 			imperativeTx
 		)
-		const tx = new CRSQLiteTransaction("async", this.dialect, session, this.schema)
+		const tx = new CRSQLiteTransaction<TFullSchema, TSchema>("async", this.dialect, session, this.schema)
 		try {
 			const result = await tx.transaction(transaction)
 			release()
