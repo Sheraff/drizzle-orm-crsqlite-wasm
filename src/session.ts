@@ -89,6 +89,7 @@ export class CRSQLiteSession<
 		)
 		const tx = new CRSQLiteTransaction("async", this.dialect, session, this.schema)
 		try {
+			// @ts-expect-error
 			const result = await tx.transaction(transaction)
 			release()
 			return result
@@ -235,6 +236,7 @@ export class CRSQLiteTransaction<
 		// @ts-expect-error -- it does exist, but we have to add a constructor for TS to recognize it
 		await this.session.exec(`SAVEPOINT ${savepointName};`)
 		try {
+			// @ts-expect-error
 			const result = await transaction(tx)
 			// @ts-expect-error -- it does exist, but we have to add a constructor for TS to recognize it
 			await this.session.exec(`RELEASE savepoint ${savepointName};`)
