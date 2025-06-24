@@ -18,7 +18,7 @@ export function drizzle<TSchema extends Record<string, unknown> = Record<string,
 	client: DBAsync,
 	config?: DrizzleConfig<TSchema>
 ): CRSQLiteDatabase<TSchema> {
-	const dialect = new SQLiteAsyncDialect()
+	const dialect = new SQLiteAsyncDialect({ casing: config?.casing })
 	let logger
 	if (config?.logger === true) {
 		logger = new DefaultLogger()

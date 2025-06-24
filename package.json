@@ -41,7 +41,7 @@
   },
   "peerDependencies": {
     "@vlcn.io/xplat-api": "^0.15.0",
-    "drizzle-orm": "^0.30.6"
+    "drizzle-orm": "^0.43.1"
   },
   "packageManager": "pnpm@10.12.2",
   "engines": {
