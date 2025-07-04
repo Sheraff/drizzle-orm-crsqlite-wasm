@@ -194,6 +194,9 @@ export class CRSQLitePreparedQuery<
 		if (this.oneTime) {
 			void stmt.finalize(this.tx)
 		}
+		if (!row) {
+			return undefined;
+		}
 		return this.customResultMapper ? this.customResultMapper([row]) : row
 	}
 
